@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CoreBanking.Infrastructure\CoreBanking.Infrastructure.csproj" />
     <ProjectReference Include="..\CoreBanking\CoreBanking.ServiceDefaults\CoreBanking.ServiceDefaults.csproj" />
   </ItemGroup>
 </Project>
