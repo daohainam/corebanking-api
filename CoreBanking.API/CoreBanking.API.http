@@ -1,6 +1,49 @@
 @CoreBanking.API_HostAddress = http://localhost:5029
 
-GET {{CoreBanking.API_HostAddress}}/weatherforecast/
+GET {{CoreBanking.API_HostAddress}}/api/v1/corebanking/customers
 Accept: application/json
+
+###
+
+
+GET {{CoreBanking.API_HostAddress}}/api/v1/corebanking/accounts
+Accept: application/json
+
+###
+
+POST {{CoreBanking.API_HostAddress}}/api/v1/corebanking/accounts
+Content-Type: application/json
+
+{
+  "customerid": "0195ba94-91c7-7390-9657-bbec22853618"
+}
+
+###
+
+PUT {{CoreBanking.API_HostAddress}}/api/v1/corebanking/accounts/0195c9f3-8576-7b0e-a093-4934b5615ad8/deposit
+Content-Type: application/json
+
+{
+  "amount": 270
+}
+
+###
+
+PUT {{CoreBanking.API_HostAddress}}/api/v1/corebanking/accounts/0195c9f3-8576-7b0e-a093-4934b5615ad8/withdraw
+Content-Type: application/json
+
+{
+  "amount": 170
+}
+
+###
+
+PUT {{CoreBanking.API_HostAddress}}/api/v1/corebanking/accounts/0195c9f3-8576-7b0e-a093-4934b5615ad8/transfer
+Content-Type: application/json
+
+{
+  "amount": 180,
+  "destinationAccountNumber": "638784484807797548"
+}
 
 ###

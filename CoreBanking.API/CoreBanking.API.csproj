@@ -8,10 +8,11 @@
 
   <ItemGroup>
     <PackageReference Include="Asp.Versioning.Http" Version="8.1.0" />
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.3" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CoreBanking.Infrastructure\CoreBanking.Infrastructure.csproj" />
     <ProjectReference Include="..\CoreBanking\CoreBanking.ServiceDefaults\CoreBanking.ServiceDefaults.csproj" />
   </ItemGroup>
 
