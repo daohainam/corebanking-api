@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35818.85 d17.13
+VisualStudioVersion = 17.13.35818.85
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreBanking.AppHost", "CoreBanking\CoreBanking.AppHost\CoreBanking.AppHost.csproj", "{38B4A06E-5805-43F6-B2A8-9DA4DEC82613}"
 EndProject
@@ -12,6 +12,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreBanking.Infrastructure", "CoreBanking.Infrastructure\CoreBanking.Infrastructure.csproj", "{966BC740-00D2-419D-8A6F-177198952B97}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreBanking.MigrationService", "CoreBanking.MigrationService\CoreBanking.MigrationService.csproj", "{81025B4B-E262-4B76-FC3C-373931113A48}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreBanking.UnitTests", "CoreBanking.UnitTests\CoreBanking.UnitTests.csproj", "{497FB5D4-A9D3-485F-8731-4EDC1AB84EFE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{81025B4B-E262-4B76-FC3C-373931113A48}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{81025B4B-E262-4B76-FC3C-373931113A48}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{81025B4B-E262-4B76-FC3C-373931113A48}.Release|Any CPU.Build.0 = Release|Any CPU
+		{497FB5D4-A9D3-485F-8731-4EDC1AB84EFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{497FB5D4-A9D3-485F-8731-4EDC1AB84EFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{497FB5D4-A9D3-485F-8731-4EDC1AB84EFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{497FB5D4-A9D3-485F-8731-4EDC1AB84EFE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
