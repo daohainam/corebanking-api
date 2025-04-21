@@ -1,4 +1,5 @@
-﻿namespace CoreBanking.API.Apis;
+﻿
+namespace CoreBanking.API.Apis;
 public static class CoreBankingApi
 {
     public static IEndpointRouteBuilder MapCoreBankingApi(this IEndpointRouteBuilder builder)
@@ -7,9 +8,11 @@ public static class CoreBankingApi
         var v1 = vApi.MapGroup("api/v{version:apiVersion}/corebanking").HasApiVersion(1, 0);
 
         v1.MapGet("/customers", GetCustomers);
+        v1.MapGet("/customers/{id:guid}", GetCustomerById);
         v1.MapPost("/customers", CreateCustomer);
 
         v1.MapGet("/accounts", GetAccounts);
+        v1.MapGet("/accounts/{id}", GetAccountById);
         v1.MapPost("/accounts", CreateAccount);
         v1.MapPut("/accounts/{id:guid}/deposit", Deposit);
         v1.MapPut("/accounts/{id:guid}/withdraw", Withdraw);
@@ -211,8 +214,17 @@ public static class CoreBankingApi
             return TypedResults.BadRequest();
         }
 
-        account.Id = Guid.CreateVersion7();
-        account.Balance = 0;
+        if (account.Id == Guid.Empty)
+        {
+            account.Id = Guid.CreateVersion7();
+        }
+
+        if (account.Balance < 0)
+        {
+            services.Logger.LogError("Balance cannot be negative");
+            return TypedResults.BadRequest();
+        }
+
         account.Number = GenerateAccountNumber();
 
         services.DbContext.Accounts.Add(account);
@@ -226,6 +238,23 @@ public static class CoreBankingApi
     private static string GenerateAccountNumber()
     {
         return DateTime.UtcNow.Ticks.ToString();
+    }
+
+    private static async Task<Results<Ok<Account>, NotFound>> GetAccountById(
+        [AsParameters] CoreBankingServices services,
+        string id
+        )
+    {
+        var account = await services.DbContext.Accounts
+            .FirstOrDefaultAsync(c => c.Number == id);
+
+        if (account == null)
+        {
+            services.Logger.LogError("Account not found");
+            return TypedResults.NotFound();
+        }
+
+        return TypedResults.Ok(account);
     }
 
     private static async Task<Ok<PaginationResponse<Account>>> GetAccounts(
@@ -277,6 +306,23 @@ public static class CoreBankingApi
         await services.DbContext.SaveChangesAsync();
 
         services.Logger.LogInformation("Customer created");
+
+        return TypedResults.Ok(customer);
+    }
+
+    private static async Task<Results<Ok<Customer>, NotFound>> GetCustomerById(
+        [AsParameters] CoreBankingServices services,
+        Guid id
+        )
+    {
+        var customer = await services.DbContext.Customers
+            .FirstOrDefaultAsync(c => c.Id == id);
+
+        if (customer == null)
+        {
+            services.Logger.LogError("Customer not found");
+            return TypedResults.NotFound();
+        }
 
         return TypedResults.Ok(customer);
     }
