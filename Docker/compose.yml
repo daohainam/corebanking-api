@@ -1,0 +1,67 @@
+name: corebanking-api.net
+
+services:
+  dashboard:
+    image: mcr.microsoft.com/dotnet/aspire-dashboard:9.0
+    ports:
+      - 18888:18888
+    environment:
+      - DASHBOARD__OTLP__AUTHMODE=ApiKey
+      - DASHBOARD__OTLP__PRIMARYAPIKEY=104293fef88930cf3c41f27f762d58f5
+
+  postgres:
+    image: postgres:latest
+    restart: always
+    volumes: 
+      - ./data/postgres:/var/lib/postgresql/data
+    env_file:
+      - ./common.env
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: scram-sha-256
+      POSTGRES_INITDB_ARGS: --auth-host=scram-sha-256 --auth-local=scram-sha-256
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: g(SuYnxEEF+TB7z9mmSjb2
+      
+  corebanking-migrationservice:
+    image: corebankingmigrationservice:latest
+    depends_on:
+      - postgres
+      - dashboard
+    env_file:
+      - ./common.env
+      - ./open-telemetry.env
+    environment:
+      ConnectionStrings__corebanking-db: Host=postgres;Port=5432;Username=postgres;Password=g(SuYnxEEF+TB7z9mmSjb2;Database=corebanking
+      OTEL_SERVICE_NAME: corebanking-migrationservice
+      
+  postgres-pgweb:
+    image: sosedoff/pgweb:latest
+    restart: always
+    volumes: 
+      - ./data/pgweb-bookmarks:/home/pgweb/.pgweb/bookmarks:ro
+    depends_on:
+      corebanking-migrationservice:
+        condition: service_completed_successfully
+    env_file:
+      - ./common.env
+    ports:
+      - 8081:8081
+
+  corebanking-api:
+    image: corebankingapi:latest
+    restart: always
+    depends_on:
+      corebanking-migrationservice:
+        condition: service_completed_successfully
+    environment:
+      ConnectionStrings__corebanking-db: Host=postgres;Port=5432;Username=postgres;Password=g(SuYnxEEF+TB7z9mmSjb2;Database=corebanking
+      OTEL_SERVICE_NAME: corebanking-api
+    env_file:
+      - ./common.env
+      - ./open-telemetry.env
+    ports: 
+      - 8080:8080
+      
+      
+
+  
