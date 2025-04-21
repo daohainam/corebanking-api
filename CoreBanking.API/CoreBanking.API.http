@@ -5,9 +5,19 @@ Accept: application/json
 
 ###
 
-
 GET {{CoreBanking.API_HostAddress}}/api/v1/corebanking/accounts
 Accept: application/json
+
+###
+
+POST {{CoreBanking.API_HostAddress}}/api/v1/corebanking/customers
+Content-Type: application/json
+
+{
+  "id": "0195ba94-91c7-7390-9657-bbec22853618",
+  "name": "Nam",
+  "address": "123 Oslo"
+}
 
 ###
 
@@ -15,6 +25,7 @@ POST {{CoreBanking.API_HostAddress}}/api/v1/corebanking/accounts
 Content-Type: application/json
 
 {
+  "id": "0195c9f3-8576-7b0e-a093-4934b5615ad8",
   "customerid": "0195ba94-91c7-7390-9657-bbec22853618"
 }
 
