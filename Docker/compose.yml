@@ -3,8 +3,6 @@ name: corebanking-api.net
 services:
   dashboard:
     image: mcr.microsoft.com/dotnet/aspire-dashboard:9.0
-    ports:
-      - 18888:18888
     environment:
       - DASHBOARD__OTLP__AUTHMODE=ApiKey
       - DASHBOARD__OTLP__PRIMARYAPIKEY=104293fef88930cf3c41f27f762d58f5
@@ -21,12 +19,19 @@ services:
       POSTGRES_INITDB_ARGS: --auth-host=scram-sha-256 --auth-local=scram-sha-256
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: g(SuYnxEEF+TB7z9mmSjb2
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
       
   corebanking-migrationservice:
     image: corebankingmigrationservice:latest
     depends_on:
-      - postgres
-      - dashboard
+      postgres:
+        condition: service_healthy
+      dashboard:
+        condition: service_started
     env_file:
       - ./common.env
       - ./open-telemetry.env
@@ -50,6 +55,9 @@ services:
   corebanking-api:
     image: corebankingapi:latest
     restart: always
+    deploy:
+      mode: replicated
+      replicas: 2
     depends_on:
       corebanking-migrationservice:
         condition: service_completed_successfully
@@ -59,9 +67,23 @@ services:
     env_file:
       - ./common.env
       - ./open-telemetry.env
-    ports: 
-      - 8080:8080
-      
+
+  http-server:
+    image: nginx:latest
+    ports:
+      - 8080:80
+      - 18888:18888
+    restart: always
+    depends_on:
+      - corebanking-api
+    volumes:
+      - ./data/http-server/templates/default.conf.template:/etc/nginx/templates/default.conf.template:rw
+      - ./data/http-server/etc/nginx/conf.d/:/etc/nginx/conf.d/:rw
+      - ./data/http-server/logs/:/var/log/nginx/
+    environment:
+      CORE_BANKING_API_SERVER_NAME: corebanking-api
+    env_file:
+      - ./common.env
       
 
   
