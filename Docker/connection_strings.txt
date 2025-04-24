@@ -1,0 +1,6 @@
+{
+	"ConnectionStrings": 
+	{
+		"corebanking-db": "Host=postgres;Port=5432;Username=postgres;Password=g(SuYnxEEF+TB7z9mmSjb2;Database=corebanking"
+	}
+}

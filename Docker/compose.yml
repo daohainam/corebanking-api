@@ -18,13 +18,15 @@ services:
       POSTGRES_HOST_AUTH_METHOD: scram-sha-256
       POSTGRES_INITDB_ARGS: --auth-host=scram-sha-256 --auth-local=scram-sha-256
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: g(SuYnxEEF+TB7z9mmSjb2
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
     healthcheck:
       test: ["CMD-SHELL", "pg_isready"]
       interval: 5s
       timeout: 5s
       retries: 5
-      
+    secrets:
+       - db_password
+        
   corebanking-migrationservice:
     image: corebankingmigrationservice:latest
     depends_on:
@@ -36,8 +38,9 @@ services:
       - ./common.env
       - ./open-telemetry.env
     environment:
-      ConnectionStrings__corebanking-db: Host=postgres;Port=5432;Username=postgres;Password=g(SuYnxEEF+TB7z9mmSjb2;Database=corebanking
       OTEL_SERVICE_NAME: corebanking-migrationservice
+    secrets:
+     - connection_strings
       
   postgres-pgweb:
     image: sosedoff/pgweb:latest
@@ -62,11 +65,12 @@ services:
       corebanking-migrationservice:
         condition: service_completed_successfully
     environment:
-      ConnectionStrings__corebanking-db: Host=postgres;Port=5432;Username=postgres;Password=g(SuYnxEEF+TB7z9mmSjb2;Database=corebanking
       OTEL_SERVICE_NAME: corebanking-api
     env_file:
       - ./common.env
       - ./open-telemetry.env
+    secrets:
+     - connection_strings
 
   http-server:
     image: nginx:latest
@@ -85,5 +89,9 @@ services:
     env_file:
       - ./common.env
       
-
+secrets:
+   db_password:
+     file: ./db_password.txt
+   connection_strings:
+     file: ./connection_strings.txt
   

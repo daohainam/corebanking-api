@@ -1,4 +1,8 @@
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Configuration
+    .AddJsonFile("/run/secrets/connection_strings", optional: true);
+
 builder.AddApplicationServices();
 
 var app = builder.Build();
