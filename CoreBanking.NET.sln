@@ -21,6 +21,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docker", "Docker", "{02EA68
 	ProjectSection(SolutionItems) = preProject
 		Docker\common.env = Docker\common.env
 		Docker\compose.yml = Docker\compose.yml
+		Docker\connection_strings.txt = Docker\connection_strings.txt
+		Docker\db_password.txt = Docker\db_password.txt
 		Docker\open-telemetry.env = Docker\open-telemetry.env
 	EndProjectSection
 EndProject
